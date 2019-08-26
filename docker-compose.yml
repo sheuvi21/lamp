@@ -1,0 +1,30 @@
+version: '3'
+services:
+  php-apache:
+    build:
+      context: ./php-apache
+    ports:
+      - 80:80
+    volumes:
+      - ./www:/var/www/html:z
+      - ./php-apache/msmtprc:/etc/msmtprc:ro
+    depends_on:
+      - mariadb
+      - mailserver
+
+  mariadb:
+    image: mariadb:10.4
+    volumes:
+      - mariadb:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 'Admin2019'
+      MYSQL_USER: 'user'
+      MYSQL_PASSWORD: '<password>'
+      MYSQL_DATABASE: 'test'
+
+  mailserver:
+    image: tianon/exim4
+    hostname: mailserver
+
+volumes:
+  mariadb:
